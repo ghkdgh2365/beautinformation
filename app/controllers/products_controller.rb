@@ -10,6 +10,20 @@ class ProductsController < ApplicationController
   # GET /products/1
   # GET /products/1.json
   def show
+    require 'open-uri'
+    require 'httparty'
+    word = "비비드 코튼 잉크 블러"
+    api_url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=#{word}&maxResults=10&key=AIzaSyAfwa8wirj-dip39TdVu9kD0ZlRAhs1nZ4"
+    api_url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=#{@product.product_name}&maxResults=10&key=AIzaSyAfwa8wirj-dip39TdVu9kD0ZlRAhs1nZ4"
+    api_uri = URI.parse(URI.escape(api_url))
+    response = HTTParty.get(api_uri)
+    data = response.parsed_response
+    @videos_id = []
+    @titles = []
+    data["items"].each do |v|
+      @videos_id << v["id"]["videoId"]
+    end
+    
   end
 
   # GET /products/new
