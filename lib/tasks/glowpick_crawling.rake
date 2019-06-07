@@ -3,6 +3,7 @@ namespace :data do
   task :glowpick => :environment do
     require 'open-uri'
     require 'nokogiri'
+    require 'httparty'
     
     doc = Nokogiri::HTML(open("https://www.glowpick.com/beauty/new"))
     contents = []
@@ -19,8 +20,18 @@ namespace :data do
             product.price = doc.css(".product-main-info__volume_price--bold").inner_text
             product.product_describe = doc.css(".product-detail__description").inner_text
             product.img = img
+            api_url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=#{product.product_name}&maxResults=10&key=AIzaSyAfwa8wirj-dip39TdVu9kD0ZlRAhs1nZ4"
+            api_uri = URI.parse(URI.escape(api_url))
+            response = HTTParty.get(api_uri)
+            data = response.parsed_response
+            @videos_id = []
+            data["items"].each do |v|
+              @videos_id << v["id"]["videoId"]
+            end
+            product.buy_link = @videos_id
             product.save
         end
+        
     end
 
   end
