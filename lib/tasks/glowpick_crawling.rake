@@ -24,12 +24,15 @@ namespace :data do
             api_uri = URI.parse(URI.escape(api_url))
             response = HTTParty.get(api_uri)
             data = response.parsed_response
-            @videos_id = []
-            data["items"].each do |v|
-              @videos_id << v["id"]["videoId"]
+            if data != [] or data != nil
+              Product.delete_all
+              @videos_id = []
+              data["items"].each do |v|
+                @videos_id << v["id"]["videoId"]
+              end
+              product.buy_link = @videos_id
+              product.save
             end
-            product.buy_link = @videos_id
-            product.save
         end
         
     end
