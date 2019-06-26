@@ -24,7 +24,7 @@ namespace :data do
             api_uri = URI.parse(URI.escape(api_url))
             response = HTTParty.get(api_uri)
             data = response.parsed_response
-            if data["items"] != [] or data["items"] != nil
+            if data["items"] != [] && data["items"] != nil
               @videos_id = []
               data["items"].each do |v|
                 @videos_id << v["id"]["videoId"]
